@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>臺大醫院醫學研究部 基因定序暨生化核心 - 線上申請系統</title>
+    <!-- 正確的 Bootstrap CSS 連結 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="card shadow">
+                    <!-- 乾淨的綠色漸層背景表頭 -->
+                    <div class="card-header p-0" style="height: 110px; overflow: hidden; background: #eaf4e8; border-top-left-radius: 0.375rem; border-top-right-radius: 0.375rem;">
+                        <img src="header.png" alt="背景" style="width: 100%; height: auto; object-fit: cover; object-position: left top; margin-top: -10px;">
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- 左上方管理員專區按鈕（直接連結至後端密碼登入頁面） -->
+                        <div class="d-flex justify-content-between align-items-center mb-4 position-relative">
+                            <a href="https://script.google.com/macros/s/AKfycbwR-Pu7qzrx8GYWsXojcNUrkUI-oKxPRti-YhSs3WBBfkmyzSHk9_4C2BrE1vL9uKzB/exec" target="_blank" class="btn btn-outline-secondary btn-sm fw-bold">
+                                🔒 管理員專區
+                            </a>
+                            <h3 class="text-secondary fw-bold m-0 position-absolute start-50 translate-middle-x" id="formTitle">實驗服務申請表單</h3>
+                            <button type="button" id="quickTestBtn" class="btn btn-warning btn-sm fw-bold">🧪 快速填入測試資料</button>
+                        </div>
+                        
+                        <form id="multiStepForm">
+                            <!-- ================= 第一頁：服務大類選擇 ================= -->
+                            <div id="step0">
+                                <div class="row g-4 mb-3">
+                                    <!-- 選項 1：生化服務 -->
+                                    <div class="col-md-4">
+                                        <div class="card service-type-card disabled-card h-100 p-3 text-center" data-category="biochem">
+                                            <div class="card-body d-flex flex-column h-100 px-2">
+                                                <div class="card-top-fixed">
+                                                    <div class="fs-1 mb-2">🔬</div>
+                                                    <h4 class="card-title fw-bold text-primary fs-5 mb-2">1. 生化服務</h4>
+                                                    <p class="card-text text-muted small mb-0">(NTA / 冷切 / Nanoflow)</p>
+                                                </div>
+                                                <div class="text-secondary small border-top pt-2 mt-2 text-start">
+                                                    <p class="mb-1 fw-bold text-dark">實驗諮詢/送件請來電：</p>
+                                                    <p class="mb-1">副研究技師 薛茚文先生 #263271</p>
+                                                    <p class="mb-0">副研究技師 林佳信先生 #263271</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 選項 2：檢體萃取及基因庫建庫服務 -->
+                                    <div class="col-md-4">
+                                        <div class="card service-type-card interactive h-100 p-3 text-center" data-category="genomics">
+                                            <div class="card-body d-flex flex-column h-100 px-2">
+                                                <div class="card-top-fixed">
+                                                    <div class="fs-1 mb-2">🧬</div>
+                                                    <h4 class="card-title fw-bold text-success fs-5 mb-2">2. 檢體萃取及基因庫建庫服務</h4>
+                                                    <p class="card-text text-muted small mb-0">(核酸萃取與QC / NGS建庫等)</p>
+                                                </div>
+                                                <div class="text-secondary small border-top pt-2 mt-2 text-start">
+                                                    <p class="mb-1 fw-bold text-dark">送件請事先來電：</p>
+                                                    <p class="mb-1">副研究技師 郭俊宏先生 #263271</p>
+                                                    <p class="mb-1">副研究技師 陳家怡小姐 #263270</p>
+                                                    <p class="mb-1">副研究技師 張容慎小姐 #263271</p>
+                                                    <p class="mb-0">副研究技師 張乃文小姐 #263271</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 選項 3：實驗諮詢/實驗設計 -->
+                                    <div class="col-md-4">
+                                        <div class="card service-type-card disabled-card h-100 p-3 text-center" data-category="consultation">
+                                            <div class="card-body d-flex flex-column h-100 px-2">
+                                                <div class="card-top-fixed">
+                                                    <div class="fs-1 mb-2">📞</div>
+                                                    <h4 class="card-title fw-bold text-info fs-5 mb-2">3. 實驗諮詢/實驗設計</h4>
+                                                    <p class="card-text text-muted small mb-0">(專屬實驗設計與深度討論)</p>
+                                                </div>
+                                                <div class="text-secondary small border-top pt-2 mt-2 text-start">
+                                                    <p class="mb-1 fw-bold text-dark">請來電：</p>
+                                                    <p class="mb-1">助理研究員 吳侑靜博士 #266680</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-light border text-muted small mb-3 p-3">
+                                    <strong>核心服務致謝提醒：</strong><br>
+                                    為了讓我們未來能持續爭取經費、評估開放更多服務項目及採購先進儀器，以提供您更好的支援，若您的研究成果順利發表，懇請於論文或期刊中致謝本核心服務。<br>
+                                    <div class="mt-2 text-center text-dark">
+                                        <em>"We thank the Sequencing and Biochemistry Core for technical assistance."</em>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ================= 第二頁：基本資料 ================= -->
+                            <div id="step1" class="d-none">
+                                <h4 class="mb-3 text-secondary">步驟一：基本資料填寫</h4>
+                                <div class="card mb-4 border-secondary shadow-sm">
+                                    <div class="card-body p-4">
+                                        <label class="form-label fw-bold fs-5 text-primary mb-3">請選擇您的身分別 <span class="text-danger">*</span></label>
+                                        <select class="form-select form-select-lg" id="applicantIdentity" required>
+                                            <option value="">請選擇身分別</option>
+                                            <option value="台大醫院/醫學院/公衛學院">1. 台大醫院/醫學院/公衛學院</option>
+                                            <option value="台灣大學">2. 台灣大學</option>
+                                            <option value="校外學術單位 (有台大醫院/醫學院/公衛學院合作)">3. 校外學術單位 (有台大醫院/醫學院/公衛學院合作)</option>
+                                            <option value="校外學術單位 (無台大醫院/醫學院/公衛學院合作)">4. 校外學術單位 (無台大醫院/醫學院/公衛學院合作)</option>
+                                            <option value="業界單位 (尚未開放)" disabled>5. 業界單位 (尚未開放)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 第一條：計畫主持人資訊 -->
+                                <div class="card mb-4 shadow-sm" style="border-color: #9ec5fe;">
+                                    <div class="card-header py-3 px-4 fw-bold text-dark" style="background-color: #cff4fc !important;" id="piCardTitle">計畫主持人資訊</div>
+                                    <div class="card-body p-4">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label class="form-label fw-bold text-secondary">姓名</label><input type="text" class="form-control py-2" id="piName" required></div>
+                                            <div class="col-md-6 mb-3"><label class="form-label fw-bold text-secondary">單位</label><input type="text" class="form-control py-2" id="piUnit" required></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">職稱</label><input type="text" class="form-control py-2" id="piTitle" required></div>
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">信箱</label><input type="email" class="form-control py-2" id="piEmail" required></div>
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">電話</label><input type="tel" class="form-control py-2" id="piPhone" required></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 第二條：申請人資訊 -->
+                                <div class="card mb-4 shadow-sm" style="border-color: #a3cfbb;">
+                                    <div class="card-header py-3 px-4 fw-bold text-dark d-flex justify-content-between align-items-center" style="background-color: #d1e7dd !important;">
+                                        <span id="applicantCardTitle">申請人資訊</span>
+                                        <div class="form-check text-dark m-0" id="sameAsPiContainer">
+                                            <input class="form-check-input" type="checkbox" id="sameAsPi">
+                                            <label class="form-check-label fw-bold" for="sameAsPi" style="cursor: pointer;">同計畫主持人</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label class="form-label fw-bold text-secondary">姓名</label><input type="text" class="form-control app-input py-2" id="applicantName" required></div>
+                                            <div class="col-md-6 mb-3"><label class="form-label fw-bold text-secondary">單位</label><input type="text" class="form-control app-input py-2" id="applicantUnit" required></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">職稱</label><input type="text" class="form-control app-input py-2" id="applicantTitle" required></div>
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">信箱</label><input type="email" class="form-control app-input py-2" id="applicantEmail" required></div>
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">電話</label><input type="tel" class="form-control app-input py-2" id="applicantPhone" required></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 第三條：聯絡人/送件人資訊 -->
+                                <div class="card mb-4 shadow-sm d-none" style="border-color: #ffe69c;" id="contactCardContainer">
+                                    <div class="card-header py-3 px-4 fw-bold text-dark" style="background-color: #fff3cd !important;">聯絡人/送件人資訊</div>
+                                    <div class="card-body p-4">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3"><label class="form-label fw-bold text-secondary">姓名 <span class="text-danger">*</span></label><input type="text" class="form-control contact-input py-2" id="contactName"></div>
+                                            <div class="col-md-6 mb-3"><label class="form-label fw-bold text-secondary">單位 <span class="text-danger">*</span></label><input type="text" class="form-control contact-input py-2" id="contactUnit"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">職稱 <span class="text-danger">*</span></label><input type="text" class="form-control contact-input py-2" id="contactTitle"></div>
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">信箱 <span class="text-danger">*</span></label><input type="email" class="form-control contact-input py-2" id="contactEmail"></div>
+                                            <div class="col-md-4 mb-3"><label class="form-label fw-bold text-secondary">電話 <span class="text-danger">*</span></label><input type="tel" class="form-control contact-input py-2" id="contactPhone"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="button" id="backToStep0Btn" class="btn btn-secondary w-50 py-2">上一步</button>
+                                    <button type="button" id="nextBtn" class="btn btn-primary w-50 py-2 fs-5">下一步：實驗背景與詳細說明</button>
+                                </div>
+                            </div>
+
+                            <!-- ================= 第三頁：實驗背景與詳細說明 ================= -->
+                            <div id="stepDetail" class="d-none">
+                                <h4 class="mb-3 text-secondary">步驟二：實驗背景與詳細說明</h4>
+                                
+                                <div class="card mb-4 border-info shadow-sm">
+                                    <div class="card-header bg-info text-white py-3 px-4"><h5 class="mb-0">1. 研究主題</h5></div>
+                                    <div class="card-body p-4">
+                                        <label class="form-label text-muted mb-2">(想用這組資料來解決什麼問題)</label>
+                                        <textarea class="form-control py-2" id="researchTopic" rows="3" placeholder="請簡述您的研究主題或預期解決的問題..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-4 border-info shadow-sm">
+                                    <div class="card-header bg-info text-white py-3 px-4"><h5 class="mb-0">2. 實驗設計說明</h5></div>
+                                    <div class="card-body p-4">
+                                        <label class="form-label text-muted mb-2">(例如: 組織/細胞株/樣本數等)</label>
+                                        <textarea class="form-control py-2" id="experimentalDesign" rows="3" placeholder="請簡述組織, 細胞株, 樣本數, 分組等..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-4 border-info shadow-sm">
+                                    <div class="card-header bg-info text-white py-3 px-4"><h5 class="mb-0">3. 備註</h5></div>
+                                    <div class="card-body p-4">
+                                        <label class="form-label text-muted mb-2">若您有任何需註明事項, 歡迎告知 (例如: 屬意的定序廠商)</label>
+                                        <textarea class="form-control py-2" id="experimentRemarks" rows="3" placeholder="請填寫其他補充或屬意的定序廠商等資訊..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-4 border-info shadow-sm">
+                                    <div class="card-header bg-info text-white py-3 px-4"><h5 class="mb-0">4. 過去論文致謝與共同作者確認</h5></div>
+                                    <div class="card-body p-4">
+                                        <label class="form-label fw-bold mb-3">過去具 "致謝核心服務" 或與核心服務人員共同作者之論文：</label>
+                                        <div class="d-flex gap-4 mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="paperAcknowledge" id="paperYes" value="Yes">
+                                                <label class="form-check-label fw-bold text-success" for="paperYes">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="paperAcknowledge" id="paperNo" value="No" checked>
+                                                <label class="form-check-label fw-bold text-secondary" for="paperNo">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="d-none" id="paperLinkContainer">
+                                            <label class="form-label fw-bold text-primary mb-2">論文連結或 PMID <span class="text-muted fs-6 fw-normal">(選填)</span></label>
+                                            <input type="text" class="form-control py-2" id="paperLinkInput" placeholder="請輸入網址或 PMID（選填）">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="button" id="backToStep1Btn" class="btn btn-secondary w-50 py-2">上一步</button>
+                                    <button type="button" id="toStep2Btn" class="btn btn-primary w-50 py-2 fs-5">下一步：選擇服務項目</button>
+                                </div>
+                            </div>
+
+                            <!-- ================= 第四頁：服務項目選取 ================= -->
+                            <div id="step2" class="d-none">
+                                <h4 class="mb-3 text-secondary">步驟三：選擇服務項目</h4>
+
+                                <!-- 【生化服務區塊】 -->
+                                <div id="biochemSection" class="d-none">
+                                    <div class="card mb-4 border-primary shadow-sm">
+                                        <div class="card-body p-4">
+                                            <h5 class="card-title text-primary fw-bold mb-3">🔬 生化服務項目</h5>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold mb-2">細項服務選擇</label>
+                                                <select class="form-select py-2" id="biochemSub">
+                                                    <option value="">請選擇生化服務細項</option>
+                                                    <option value="NTA">NTA (Nanoparticle Tracking Analysis)</option>
+                                                    <option value="冷切">冷切服務</option>
+                                                    <option value="Nanoflow">Nanoflow 服務</option>
+                                                </select>
+                                            </div>
+                                            <div class="mt-3 pt-3 border-top text-end">
+                                                <button type="button" class="btn btn-outline-success fw-bold download-sample-sheet-btn" data-block="biochem">
+                                                    📥 預覽/檢視檢體送件單 (PDF)
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 【基因庫與萃取服務區塊】 -->
+                                <div id="genomicsSection" class="d-none">
+                                    <!-- 服務大項一：16S PCR -->
+                                    <div class="card mb-4 border-info shadow-sm">
+                                        <div class="card-body p-4">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input service-check" type="checkbox" value="16S PCR" id="service0" data-target="block0">
+                                                <label class="form-check-label fw-bold fs-5 text-info" for="service0">一、16S PCR</label>
+                                            </div>
+                                            <div class="ps-3 d-none" id="block0-container">
+                                                <div class="mb-3 p-3 bg-light border rounded">
+                                                    <div class="form-check mb-3 pb-2 border-bottom">
+                                                        <input class="form-check-input" type="checkbox" id="includeStoolExtraction" value="含 Stool DNA 萃取">
+                                                        <label class="form-check-label fw-bold text-dark" for="includeStoolExtraction">另需要 Stool DNA 萃取服務</label>
+                                                    </div>
+
+                                                    <label class="form-label fw-bold text-dark mb-2">16S PCR 區域選擇：</label>
+                                                    <div class="d-flex flex-column gap-2 mb-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="pcr16sMethod" id="pcr16s_v3v4" value="16S V3-V4 (定序在醫學院第一共研)" checked>
+                                                            <label class="form-check-label" for="pcr16s_v3v4">16S V3-V4 (定序在醫學院第一共研)</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="pcr16sMethod" id="pcr16s_full_pacbio" value="Full Length 醫學院第一共研 PacBio">
+                                                            <label class="form-check-label" for="pcr16s_full_pacbio">Full Length 醫學院第一共研 PacBio</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="pcr16sMethod" id="pcr16s_full_nanopore" value="Full Length 醫研部定序核心 Nanopore">
+                                                            <label class="form-check-label" for="pcr16s_full_nanopore">Full Length 醫研部定序核心 Nanopore</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-text text-muted mb-1">* 贈送片段分析</div>
+                                                    <div class="form-text text-danger" id="v3v4Note">※ 建庫及上機費用由醫學院一共收取</div>
+                                                    <div class="form-text text-danger" id="pacbioNote" style="display: none;">※ 建庫及上機費用由醫學院一共收取</div>
+                                                    <div class="form-text text-danger" id="nanoporeNote" style="display: none;">※ 選擇 Nanopore 定序有額外建庫及上機費用 (由定序核心收取)</div>
+                                                </div>
+                                                <div class="mt-3 pt-3 border-top text-end">
+                                                    <button type="button" class="btn btn-outline-success fw-bold download-sample-sheet-btn" data-block="0">
+                                                        📥 預覽/檢視檢體送件單 (PDF)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 服務大項二：核酸萃取/樣本品管/核酸片段化 -->
+                                    <div class="card mb-4 border-info shadow-sm">
+                                        <div class="card-body p-4">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input service-check" type="checkbox" value="核酸萃取/樣本品管/核酸片段化" id="service1" data-target="block1">
+                                                <label class="form-check-label fw-bold fs-5 text-info" for="service1">二、核酸萃取/樣本品管/核酸片段化</label>
+                                            </div>
+                                            <div class="ps-3 d-none" id="block1-container">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold mb-2">請選擇服務項目</label>
+                                                    <select class="form-select extraction-sub py-2" id="sub1">
+                                                        <option value="">請選擇服務項目</option>
+                                                        <option value="DNA 萃取">DNA 萃取</option>
+                                                        <option value="RNA 萃取">RNA 萃取</option>
+                                                        <option value="Total Nucleic Acid 萃取">Total Nucleic Acid 萃取</option>
+                                                        <option value="核酸片段化 (Covaris Shearing)">核酸片段化 (Covaris Shearing)</option>
+                                                        <option value="DNA/RNA QC (已自行萃取核酸)">DNA/RNA QC (已自行萃取核酸)</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold mb-2">樣品種類 (Sample Type)</label>
+                                                    <select class="form-select py-2" id="sampleType1">
+                                                        <option value="">請先選擇服務項目</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- 附加 QC 檢測區塊 -->
+                                                <div class="mb-3 p-3 bg-light border rounded" id="qcContainer">
+                                                    <label class="form-label fw-bold text-dark mb-2" id="qcTitleLabel">附加 QC 檢測：</label>
+                                                    <div class="d-flex gap-4" id="qcCheckboxGroup">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input qc-check-input" type="checkbox" id="qcFragment" value="片段分析">
+                                                            <label class="form-check-label" for="qcFragment">片段分析</label>
+                                                        </div>
+                                                        <div class="form-check" id="fluorescentDiv">
+                                                            <input class="form-check-input qc-check-input" type="checkbox" id="qcFluorescent" value="螢光定量">
+                                                            <label class="form-check-label" for="qcFluorescent">螢光定量</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 獨立建庫選項：DNA 萃取專用 -->
+                                                <div class="mb-3 p-3 bg-light border rounded d-none" id="dnaNgsBuildingWrapper">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input ngs-build-check" type="checkbox" id="includeDnaNgsBuilding" value="我要做 NGS 建庫">
+                                                        <label class="form-check-label fw-bold text-primary" for="includeDnaNgsBuilding" style="cursor: pointer;">
+                                                            🧬 我要做 NGS 建庫
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 獨立建庫選項：RNA 萃取專用 -->
+                                                <div class="mb-3 p-3 bg-light border rounded d-none" id="rnaNgsBuildingWrapper">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input ngs-build-check" type="checkbox" id="includeRnaNgsBuilding" value="我要做 NGS 建庫">
+                                                        <label class="form-check-label fw-bold text-success" for="includeRnaNgsBuilding" style="cursor: pointer;">
+                                                            🧬 我要做 NGS 建庫
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 雙軌建庫選項：Total Nucleic Acid 萃取專用 -->
+                                                <div class="mb-3 p-3 bg-light border rounded d-none" id="totalNgsBuildingWrapper">
+                                                    <div class="d-flex flex-column gap-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input ngs-build-check" type="checkbox" id="includeTotalDnaNgs" value="我要做 DNA NGS 建庫">
+                                                            <label class="form-check-label fw-bold text-primary" for="includeTotalDnaNgs" style="cursor: pointer;">
+                                                                🧬 我要做 DNA NGS 建庫
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input ngs-build-check" type="checkbox" id="includeTotalRnaNgs" value="我要做 RNA NGS 建庫">
+                                                            <label class="form-check-label fw-bold text-success" for="includeTotalRnaNgs" style="cursor: pointer;">
+                                                                🧬 我要做 RNA NGS 建庫
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-3 pt-3 border-top text-end" id="block1DownloadContainer">
+                                                    <button type="button" class="btn btn-outline-success fw-bold download-sample-sheet-btn" data-block="1">
+                                                        📥 預覽/檢視檢體送件單 (PDF)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 服務大項三：NGS高通量定序建庫 -->
+                                    <div class="card mb-4 border-info shadow-sm">
+                                        <div class="card-body p-4">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input service-check" type="checkbox" value="NGS高通量定序建庫" id="service2" data-target="block2">
+                                                <label class="form-check-label fw-bold fs-5 text-info" for="service2">三、NGS高通量定序建庫</label>
+                                            </div>
+                                            <div class="ps-3 d-none" id="block2-container">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold mb-2">請選擇建庫項目</label>
+                                                    <select class="form-select py-2" id="sub2">
+                                                        <option value="">請選擇建庫項目</option>
+                                                        <option value="自備建庫試劑">1. 自備建庫試劑</option>
+                                                        <option value="DNAseq (WES/Target panel/ChIPseq/ATACseq)">2. DNAseq (WES/Target panel/ChIPseq/ATACseq)</option>
+                                                        <option value="Targeted RNAseq (RNA exome)">3. Targeted RNAseq (RNA exome)</option>
+                                                        <option value="mRNAseq (illumina 基米試劑+6G/illumina 台基盟試劑+6G)">4. mRNAseq (illumina 基米試劑+6G/illumina 台基盟試劑+6G)</option>
+                                                        <option value="totalRNA (illumina 基米試劑+10G/KAPA 台基盟試劑+10G)">5. totalRNA (illumina 基米試劑+10G/KAPA 台基盟試劑+10G)</option>
+                                                        <option value="ultralow input mRNA (Takara)">6. ultralow input mRNA (Takara)</option>
+                                                        <option value="ultralow input totalRNA (Takara)">7. ultralow input totalRNA (Takara)</option>
+                                                        <option value="Nanopore長片段建庫及定序">8. Nanopore長片段建庫及定序</option>
+                                                        <option value="尚未決定 (將由核心與您討論並建議建庫方式)">9. 尚未決定 (將由核心與您討論並建議建庫方式)</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mt-3 pt-3 border-top text-end">
+                                                    <button type="button" class="btn btn-outline-success fw-bold download-sample-sheet-btn" data-block="2">
+                                                        📥 預覽/檢視檢體送件單 (PDF)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 服務大項四：Single Cell Transcriptomics -->
+                                    <div class="card mb-4 border-info shadow-sm">
+                                        <div class="card-body p-4">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input service-check" type="checkbox" value="Single Cell Transcriptomics" id="service3" data-target="block3">
+                                                <label class="form-check-label fw-bold fs-5 text-info" for="service3">四、Single Cell Transcriptomics</label>
+                                            </div>
+                                            <div class="ps-3 d-none" id="block3-container">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold mb-2">請選擇平台</label>
+                                                    <select class="form-select py-2" id="sub3Category">
+                                                        <option value="">請選擇平台</option>
+                                                        <option value="Universal">1. Universal (不限物種 / High viability cells)</option>
+                                                        <option value="Fixed RNA Profiling">2. Fixed RNA Profiling</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Universal 專屬 Kit 下拉選單 -->
+                                                <div class="mb-3 d-none" id="universalKitContainer">
+                                                    <label class="form-label fw-bold mb-2">請選擇 Kit 規格</label>
+                                                    <select class="form-select py-2" id="universalKitSub">
+                                                        <option value="">請選擇 Kit 規格</option>
+                                                        <option value="GEM-X 3'">GEM-X 3'</option>
+                                                        <option value="GEM-X 5'">GEM-X 5'</option>
+                                                        <option value="GEM-X 3' On-chip multiplex">GEM-X 3' On-chip multiplex</option>
+                                                        <option value="GEM-X 5' On-chip multiplex">GEM-X 5' On-chip multiplex</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Fixed RNA Profiling 專屬下拉選單 -->
+                                                <div class="mb-3 d-none" id="fixedKitContainer">
+                                                    <label class="form-label fw-bold mb-2">請選擇規格</label>
+                                                    <select class="form-select py-2" id="fixedKitSub">
+                                                        <option value="">請選擇規格</option>
+                                                        <option value="GEM-X Flex Human">1. GEM-X Flex Human</option>
+                                                        <option value="GEM-X Flex Mouse">2. GEM-X Flex Mouse</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- 5' 系列專屬 BCR / TCR 附加選項 (改為可複選) -->
+                                                <div class="mb-3 p-3 bg-light border rounded d-none" id="bcrTcrContainer">
+                                                    <label class="form-label fw-bold text-dark mb-2">附加定序選項：</label>
+                                                    <div class="d-flex gap-4">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input bcr-tcr-check" type="checkbox" id="checkBcr" value="BCR">
+                                                            <label class="form-check-label" for="checkBcr">加做 BCR</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input bcr-tcr-check" type="checkbox" id="checkTcr" value="TCR">
+                                                            <label class="form-check-label" for="checkTcr">加做 TCR</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-3 pt-3 border-top text-end">
+                                                    <button type="button" class="btn btn-outline-success fw-bold download-sample-sheet-btn" data-block="3">
+                                                        📥 預覽/檢視檢體送件單 (PDF)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 服務大項五：Spatial Transcriptomics 空間體學 -->
+                                    <div class="card mb-4 border-info shadow-sm">
+                                        <div class="card-body p-4">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input service-check" type="checkbox" value="Spatial Transcriptomics 空間體學" id="service4" data-target="block4">
+                                                <label class="form-check-label fw-bold fs-5 text-info" for="service4">五、Spatial Transcriptomics 空間體學</label>
+                                            </div>
+                                            <div class="ps-3 d-none" id="block4-container">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold mb-2">請選擇平台</label>
+                                                    <select class="form-select py-2" id="sub4Category">
+                                                        <option value="">請選擇平台</option>
+                                                        <option value="Visium">1. Visium</option>
+                                                        <option value="Xenium">2. Xenium</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Visium 專屬下拉選單 -->
+                                                <div class="mb-3 d-none" id="visiumSubContainer">
+                                                    <label class="form-label fw-bold mb-2">請選擇 Visium 規格</label>
+                                                    <select class="form-select py-2" id="visiumSub">
+                                                        <option value="">請選擇規格</option>
+                                                        <option value="Visium HD 6.5mm*6.5mm - mouse">Visium HD 6.5mm*6.5mm - mouse</option>
+                                                        <option value="Visium HD 6.5mm*6.5mm - human">Visium HD 6.5mm*6.5mm - human</option>
+                                                        <option value="Visium HD 11mm*11mm - mouse">Visium HD 11mm*11mm - mouse</option>
+                                                        <option value="Visium HD 11mm*11mm - human">Visium HD 11mm*11mm - human</option>
+                                                        <option value="Visium HD 3' (Universal 不限物種, 需high quality sample)">Visium HD 3' (Universal 不限物種, 需high quality sample)</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Xenium 專屬下拉選單 -->
+                                                <div class="mb-3 d-none" id="xeniumSubContainer">
+                                                    <label class="form-label fw-bold mb-2">請選擇 Xenium 規格</label>
+                                                    <select class="form-select py-2" id="xeniumSub">
+                                                        <option value="">請選擇規格</option>
+                                                        <option value="Xenium Prime 5K - mouse">Xenium Prime 5K - mouse</option>
+                                                        <option value="Xenium Prime 5K - human">Xenium Prime 5K - human</option>
+                                                        <option value="Xenium Custom Panel (尚未開放)" disabled>Xenium Custom Panel (尚未開放)</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="mt-3 pt-3 border-top text-end">
+                                                    <button type="button" class="btn btn-outline-success fw-bold download-sample-sheet-btn" data-block="4">
+                                                        📥 預覽/檢視檢體送件單 (PDF)
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mb-2">
+                                    <button type="button" id="prevBtn" class="btn btn-secondary w-50 py-2">上一步</button>
+                                    <button type="submit" id="submitBtn" class="btn btn-success w-50 py-2">確認送出申請</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 正式列印專用區塊 ================= -->
+    <div id="printSection">
+        <div style="font-size: 13px; font-weight: bold; text-align: right; margin-bottom: 3px;">
+            案件編號：<span style="border-bottom: 1px solid #333; display: inline-block; min-width: 120px; text-align: center;">__________</span>
+        </div>
+
+        <div class="text-center mb-2 pb-2 border-bottom">
+            <h3 class="fw-bold mb-1" style="font-size: 20px;">臺大醫院醫學研究部</h3>
+            <h5 class="text-secondary mb-0" style="font-size: 15px;">基因定序暨生化核心 - 檢體送件單</h5>
+        </div>
+        
+        <table class="table table-bordered mb-2">
+            <tbody>
+                <tr>
+                    <th class="table-light" style="width: 20%;">申請人姓名</th>
+                    <td id="lblApplicantName" style="width: 30%;"></td>
+                    <th class="table-light" style="width: 20%;">聯絡電話</th>
+                    <td id="lblApplicantPhone" style="width: 30%;"></td>
+                </tr>
+                <tr>
+                    <th class="table-light">送件日期</th>
+                    <td id="lblDate"></td>
+                    <th class="table-light">核心服務項目</th>
+                    <td id="lblMainCategory"></td>
+                </tr>
+                <tr>
+                    <th class="table-light">服務細項內容</th>
+                    <td id="lblServiceDetails" style="font-weight: bold; color: #0d6efd;"></td>
+                    <th class="table-light">申請人信箱</th>
+                    <td id="lblApplicantEmail" style="font-weight: bold;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h6 class="fw-bold text-primary mb-1" style="font-size: 13px;" id="sampleTableTitle">🧬 檢體清單明細</h6>
+        <table class="table table-bordered sample-table mb-1">
+            <thead class="test-table-header table-light text-center" id="sampleTableHeader"></thead>
+            <tbody id="sampleTableBody"></tbody>
+        </table>
+
+        <div class="text-muted small mb-2" style="font-size: 10px;" id="sampleNoticeText">
+            <em>* 超過樣本限制請另外填寫一張單子。（本表由核心人員填寫核心編號）</em>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-12 text-end">
+                <p class="mb-0 fw-bold" style="font-size: 12px;">主持人核章：________________________</p>
+            </div>
+        </div>
+
+        <div class="mt-2 pt-1 border-top text-muted small text-center" style="font-size: 10px;">
+            <em>"We thank the Sequencing and Biochemistry Core for technical assistance."</em>
+        </div>
+    </div>
+
+    <!-- PDF 預覽互動視窗 (Modal) -->
+    <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title fw-bold" id="pdfPreviewModalLabel">📄 檢體送件單預覽</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body bg-light p-4">
+            <div id="pdfPreviewContainer" class="card p-4 shadow-sm bg-white mx-auto" style="max-width: 800px;"></div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <span class="text-muted small">* 您可以點擊「直接列印」或「儲存為 PDF」。</span>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+              <button type="button" id="printModalBtn" class="btn btn-primary fw-bold">🖨️ 直接列印</button>
+              <button type="button" id="savePdfModalBtn" class="btn btn-success fw-bold">📥 儲存為 PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 置中大字的成功送出提示彈出視窗 (Modal) -->
+    <!-- ========================================== -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title fw-bold">📢 系統提示</h5>
+          </div>
+          <div class="modal-body text-center py-5">
+            <div style="font-size: 3rem;" class="mb-3">🎉</div>
+            <h4 class="fw-bold text-dark">已成功送出申請案件！</h4>
+          </div>
+          <div class="modal-footer justify-content-center bg-light">
+            <button type="button" class="btn btn-success px-5 fw-bold" id="closeSuccessModalBtn" data-bs-dismiss="modal">確定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const identitySelect = document.getElementById('applicantIdentity');
+            const contactCard = document.getElementById('contactCardContainer');
+            const applicantCardTitle = document.getElementById('applicantCardTitle');
+            const sameAsPiContainer = document.getElementById('sameAsPiContainer');
+
+            if (identitySelect && contactCard) {
+                identitySelect.addEventListener('change', function() {
+                    const selectedVal = this.value;
+                    if (selectedVal.includes('校外學術單位 (有台大醫院/醫學院/公衛學院合作)')) {
+                        contactCard.classList.remove('d-none');
+                        document.querySelectorAll('.contact-input').forEach(el => el.setAttribute('required', 'true'));
+                        if (applicantCardTitle) { applicantCardTitle.textContent = '申請人資訊 (外校計畫主持人)'; }
+                        if (sameAsPiContainer) {
+                            sameAsPiContainer.classList.add('d-none');
+                            document.getElementById('sameAsPi').checked = false;
+                        }
+                    } else {
+                        contactCard.classList.add('d-none');
+                        document.querySelectorAll('.contact-input').forEach(el => {
+                            el.removeAttribute('required');
+                            el.value = '';
+                        });
+                        if (applicantCardTitle) { applicantCardTitle.textContent = '申請人資訊'; }
+                        if (sameAsPiContainer) { sameAsPiContainer.classList.remove('d-none'); }
+                    }
+                });
+            }
+
+            const closeBtn = document.getElementById('closeSuccessModalBtn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    location.reload();
+                });
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
