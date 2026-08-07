@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (支援換行符號 \n)
+    // 7. 表單最後確認送出與 Google Sheets 串接 (使用 URLSearchParams 確保寫入)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -960,6 +960,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
                 piUnit: document.getElementById('piUnit')?.value || '',
+                piEmail: document.getElementById('piEmail')?.value || '', // 主持人信箱
                 appName: document.getElementById('applicantName')?.value || '',
                 appPhone: document.getElementById('applicantPhone')?.value || '',
                 appEmail: document.getElementById('applicantEmail')?.value || '',
@@ -980,14 +981,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwR-Pu7qzrx8GYWsXojcNUrkUI-oKxPRti-YhSs3WBBfkmyzSHk9_4C2BrE1vL9uKzB/exec';
 
+            // 使用 URLSearchParams 確保資料穩定寫入 Google Sheets
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(formData)
+                body: new URLSearchParams(formData)
             })
-            .then(() => {
-                // 改成呼叫我們的大字置中彈出視窗
+            .then(response => response.text())
+            .then(result => {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             })
