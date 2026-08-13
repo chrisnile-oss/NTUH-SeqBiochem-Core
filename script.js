@@ -979,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwR-Pu7qzrx8GYWsXojcNUrkUI-oKxPRti-YhSs3WBBfkmyzSHk9_4C2BrE1vL9uKzB/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
             // 使用 URLSearchParams 確保資料穩定寫入 Google Sheets
             fetch(scriptURL, {
