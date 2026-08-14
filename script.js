@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (使用 URLSearchParams 確保寫入)
+    // 7. 表單最後確認送出與 Google Sheets 串接 (透過隱藏 Form/Iframe 送出)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -956,16 +956,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const formData = {
+            const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
                 piUnit: document.getElementById('piUnit')?.value || '',
-                piEmail: document.getElementById('piEmail')?.value || '', // 主持人信箱
+                piEmail: document.getElementById('piEmail')?.value || '',
                 appName: document.getElementById('applicantName')?.value || '',
                 appPhone: document.getElementById('applicantPhone')?.value || '',
                 appEmail: document.getElementById('applicantEmail')?.value || '',
                 mainCategory: mainCategoryText,
-                serviceDetails: detailsTextList.join('\n'), // 採用換行符號
+                serviceDetails: detailsTextList.join('\n'),
                 contactName: document.getElementById('contactName')?.value || '',
                 contactUnit: document.getElementById('contactUnit')?.value || '',
                 contactTitle: document.getElementById('contactTitle')?.value || '',
@@ -981,24 +981,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
-            // 使用 URLSearchParams 確保資料穩定寫入 Google Sheets
-            fetch(scriptURL, {
-                method: 'POST',
-                body: new URLSearchParams(formData)
-            })
-            .then(response => response.text())
-            .then(result => {
+            // 建立隱藏的 Form 透過 iframe 送出，完美避開 CORS 與重新導向問題
+            const iframeName = 'hidden_iframe_' + Date.now();
+            const iframe = document.createElement('iframe');
+            iframe.name = iframeName;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = scriptURL;
+            form.target = iframeName;
+
+            // 將資料包裝進隱藏欄位
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(formDataObj);
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+
+            // 稍微延遲後顯示成功畫面並清理 DOM
+            setTimeout(() => {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert('送出失敗，請檢查網路連線或稍後再試。');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '確認送出申請';
-                }
-            });
+                form.remove();
+                iframe.remove();
+            }, 1000);
         });
     }
 
