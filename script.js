@@ -1012,28 +1012,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 1000);
         });
     }
-
-    // ==========================================
-    // 8. 快速填入測試資料功能
-    // ==========================================
-    const quickTestBtn = document.getElementById('quickTestBtn');
-    if (quickTestBtn) {
-        quickTestBtn.addEventListener('click', function () {
-            document.getElementById('applicantIdentity').value = "台大醫院/醫學院/公衛學院";
-            document.getElementById('piName').value = "王大明";
-            document.getElementById('piUnit').value = "內科部";
-            document.getElementById('piTitle').value = "教授";
-            document.getElementById('piEmail').value = "test@ntu.edu.tw";
-            document.getElementById('piPhone').value = "0912345678";
-            
-            document.getElementById('sameAsPi').checked = true;
-            document.getElementById('applicantName').value = "王大明";
-            document.getElementById('applicantUnit').value = "內科部";
-            document.getElementById('applicantTitle').value = "教授";
-            document.getElementById('applicantEmail').value = "test@ntu.edu.tw";
-            document.getElementById('applicantPhone').value = "0912345678";
-            
-            alert('已快速填入測試資料！');
-        });
-    }
 });
