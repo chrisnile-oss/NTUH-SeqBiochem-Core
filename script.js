@@ -985,7 +985,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxA6HegXufIW7q2ZV2uYeS4T1svSHT0Tq8Sp5gowk1tdowUm2L6oHsjTd8jc7gqYp_b/exec';
 
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
