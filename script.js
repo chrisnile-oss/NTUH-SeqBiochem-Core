@@ -956,6 +956,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // 在這裡把步驟二的「研究主題」、「實驗設計說明」、「備註」一起打包進去！
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
@@ -970,7 +971,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactUnit: document.getElementById('contactUnit')?.value || '',
                 contactTitle: document.getElementById('contactTitle')?.value || '',
                 contactEmail: document.getElementById('contactEmail')?.value || '',
-                contactPhone: document.getElementById('contactPhone')?.value || ''
+                contactPhone: document.getElementById('contactPhone')?.value || '',
+                
+                // 補上這三個欄位，對應後端 GAS 的接收與合併
+                "研究主題": document.getElementById('researchTopic')?.value || '',
+                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
+                "備註": document.getElementById('experimentRemarks')?.value || ''
             };
 
             const submitBtn = document.getElementById('submitBtn');
@@ -981,7 +987,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
-            // 建立隱藏的 Form 透過 iframe 送出，完美避開 CORS 與重新導向問題
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
             iframe.name = iframeName;
@@ -993,7 +998,6 @@ document.addEventListener('DOMContentLoaded', function () {
             form.action = scriptURL;
             form.target = iframeName;
 
-            // 將資料包裝進隱藏欄位
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'data';
@@ -1003,7 +1007,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.appendChild(form);
             form.submit();
 
-            // 稍微延遲後顯示成功畫面並清理 DOM
             setTimeout(() => {
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
