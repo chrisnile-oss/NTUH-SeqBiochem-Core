@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
-    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制 (新增功能)
+    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制
     // ==========================================
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     
     if (token) {
-        // 如果網址帶有 token，自動隱藏主表單，向後端請求該筆資料並彈出檢體單預覽
         const multiStepForm = document.getElementById('multiStepForm');
         if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
 
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (res.status === 'success' && res.data) {
                     const row = res.data;
                     
-                    // 自動填入檢體單欄位資料
                     const lblName = document.getElementById('lblApplicantName');
                     const lblPhone = document.getElementById('lblApplicantPhone');
                     const lblDate = document.getElementById('lblDate');
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         lblServiceDetails.innerHTML = row['服務細項內容'] ? String(row['服務細項內容']).replace(/\n/g, '<br>') : '（無特定細項）';
                     }
 
-                    // 產生預設 6 筆檢體表格
                     const sampleTableBody = document.getElementById('sampleTableBody');
                     if (sampleTableBody) {
                         sampleTableBody.innerHTML = '';
@@ -54,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
 
-                    // 自動觸發 Modal 預覽視窗顯示
                     const printSectionHtml = document.getElementById('printSection').innerHTML;
                     const pdfPreviewContainer = document.getElementById('pdfPreviewContainer');
                     if (pdfPreviewContainer) {
@@ -939,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (透過隱藏 Form/Iframe 送出)
+    // 7. 表單最後確認送出與 Google Sheets 串接
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -1033,6 +1029,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // 💡 在前端直接組合好 Q 欄要寫入的文字格式，確保後端能準確收到
+            const rTopic = document.getElementById('researchTopic')?.value || '';
+            const eDesign = document.getElementById('experimentalDesign')?.value || '';
+            const eRemarks = document.getElementById('experimentRemarks')?.value || '';
+
+            const combinedXuqiu = 
+                "【研究主題】\n" + rTopic + "\n\n" +
+                "【實驗設計說明】\n" + eDesign + "\n\n" +
+                "【備註】\n" + eRemarks;
+
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
@@ -1049,9 +1055,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                "研究主題": document.getElementById('researchTopic')?.value || '',
-                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
-                "備註": document.getElementById('experimentRemarks')?.value || ''
+                shiyanXuqiu: combinedXuqiu
             };
 
             const submitBtn = document.getElementById('submitBtn');
