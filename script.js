@@ -935,12 +935,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (使用隱藏 iframe 表單送出)
+    // 7. 表單最後確認送出與 Google Sheets 串接 (移除 required 限制以確保送出)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
         multiStepForm.addEventListener('submit', function (e) {
             e.preventDefault();
+
+            // 💡 關鍵修正：強制移除所有 required 限制，防止瀏覽器因為隱藏分頁欄位而攔截送出
+            document.querySelectorAll('[required]').forEach(el => el.removeAttribute('required'));
 
             let mainCategoryText = '';
             let detailsTextList = [];
@@ -998,7 +1001,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service3Checked) {
                     const sub3 = document.getElementById('sub3Category')?.value;
                     if (!sub3) {
-                        hasError, errorMessage = true, '⚠️ 您勾選了 Single Cell，請選擇平台！';
+                        hasError = true;
+                        errorMessage = '⚠️ 您勾選了 Single Cell，請選擇平台！';
                     } else {
                         mainCategoryText += 'Single Cell Transcriptomics; ';
                         detailsTextList.push(`平台: ${sub3}`);
@@ -1009,7 +1013,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service4Checked) {
                     const sub4 = document.getElementById('sub4Category')?.value;
                     if (!sub4) {
-                        hasError, errorMessage = true, '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
+                        hasError = true;
+                        errorMessage = '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
                     } else {
                         mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
                         detailsTextList.push(`平台: ${sub4}`);
