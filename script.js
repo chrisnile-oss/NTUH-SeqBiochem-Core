@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const multiStepForm = document.getElementById('multiStepForm');
         if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxA6HegXufIW7q2ZV2uYeS4T1svSHT0Tq8Sp5gowk1tdowUm2L6oHsjTd8jc7gqYp_b/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
         
         fetch(`${scriptURL}?token=${token}`)
             .then(response => response.json())
@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (獨立欄位傳送版)
+    // 7. 表單最後確認送出與 Google Sheets 串接
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -1029,8 +1029,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 獨立拆開欄位，確保以傳統 POST 表單變數送出時絕對不會遺失
-            const submitData = {
+            // 在前端先組合好 Q 欄文字，透過 shiyanXuqiu 欄位安全傳遞
+            const rTopic = document.getElementById('researchTopic')?.value || '';
+            const eDesign = document.getElementById('experimentalDesign')?.value || '';
+            const eRemarks = document.getElementById('experimentRemarks')?.value || '';
+
+            const combinedXuqiu = 
+                "【研究主題】\n" + rTopic + "\n\n" +
+                "【實驗設計說明】\n" + eDesign + "\n\n" +
+                "【備註】\n" + eRemarks;
+
+            const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
                 piUnit: document.getElementById('piUnit')?.value || '',
@@ -1046,9 +1055,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                "研究主題": document.getElementById('researchTopic')?.value || '',
-                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
-                "備註": document.getElementById('experimentRemarks')?.value || ''
+                shiyanXuqiu: combinedXuqiu
             };
 
             const submitBtn = document.getElementById('submitBtn');
@@ -1057,6 +1064,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
+            // ⚠️ 確保此處使用正確部署的網址
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
             const iframeName = 'hidden_iframe_' + Date.now();
@@ -1070,14 +1078,11 @@ document.addEventListener('DOMContentLoaded', function () {
             form.action = scriptURL;
             form.target = iframeName;
 
-            // 將每個欄位獨立建立隱藏 input 傳送，避開大型 JSON 解析失敗的問題
-            for (const key in submitData) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = submitData[key];
-                form.appendChild(input);
-            }
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(formDataObj);
+            form.appendChild(input);
 
             document.body.appendChild(form);
             form.submit();
