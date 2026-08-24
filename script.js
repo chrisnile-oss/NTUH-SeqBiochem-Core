@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 最終極穩定解法：將所有欄位（含第三頁）拆為獨立 hidden input 傳遞
+    // 7. 最終極穩定送出機制（包含第三頁實驗細節與完整欄位）
     // ==========================================
     const submitBtn = document.getElementById('submitBtn');
     if (submitBtn) {
@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.disabled = true;
             submitBtn.textContent = '資料傳送中...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxA6HegXufIW7q2ZV2uYeS4T1svSHT0Tq8Sp5gowk1tdowUm2L6oHsjTd8jc7gqYp_b/exec';
 
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
@@ -995,8 +995,8 @@ document.addEventListener('DOMContentLoaded', function () {
             form.action = scriptURL;
             form.target = iframeName;
 
-            // 💡 關鍵：將每個欄位（包含第三頁的中文鍵值）獨立建立為一個隱藏 input
-            const fields = {
+            // 💡 關鍵：將所有基本資料與第三頁的實驗背景欄位打包成 JSON，放入隱藏 input 中傳遞給後端
+            const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
                 piUnit: document.getElementById('piUnit')?.value || '',
@@ -1011,6 +1011,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactTitle: document.getElementById('contactTitle')?.value || '',
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
+                
+                // 💡 絕對雙重保險的第三頁欄位（中英文鍵值齊全）
                 "研究主題": document.getElementById('researchTopic')?.value || '',
                 "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
                 "備註": document.getElementById('experimentRemarks')?.value || '',
@@ -1019,13 +1021,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 experimentRemarks: document.getElementById('experimentRemarks')?.value || ''
             };
 
-            for (const key in fields) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = fields[key];
-                form.appendChild(input);
-            }
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(formDataObj);
+            form.appendChild(input);
 
             document.body.appendChild(form);
             form.submit();
