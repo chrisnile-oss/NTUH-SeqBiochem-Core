@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接
+    // 7. 表單最後確認送出與 Google Sheets 串接 (獨立欄位傳送版)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -1029,17 +1029,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 💡 在前端直接組合好 Q 欄要寫入的文字格式，確保後端能準確收到
-            const rTopic = document.getElementById('researchTopic')?.value || '';
-            const eDesign = document.getElementById('experimentalDesign')?.value || '';
-            const eRemarks = document.getElementById('experimentRemarks')?.value || '';
-
-            const combinedXuqiu = 
-                "【研究主題】\n" + rTopic + "\n\n" +
-                "【實驗設計說明】\n" + eDesign + "\n\n" +
-                "【備註】\n" + eRemarks;
-
-            const formDataObj = {
+            // 獨立拆開欄位，確保以傳統 POST 表單變數送出時絕對不會遺失
+            const submitData = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
                 piUnit: document.getElementById('piUnit')?.value || '',
@@ -1055,7 +1046,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                shiyanXuqiu: combinedXuqiu
+                "研究主題": document.getElementById('researchTopic')?.value || '',
+                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
+                "備註": document.getElementById('experimentRemarks')?.value || ''
             };
 
             const submitBtn = document.getElementById('submitBtn');
@@ -1077,11 +1070,14 @@ document.addEventListener('DOMContentLoaded', function () {
             form.action = scriptURL;
             form.target = iframeName;
 
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = JSON.stringify(formDataObj);
-            form.appendChild(input);
+            // 將每個欄位獨立建立隱藏 input 傳送，避開大型 JSON 解析失敗的問題
+            for (const key in submitData) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = submitData[key];
+                form.appendChild(input);
+            }
 
             document.body.appendChild(form);
             form.submit();
