@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ==========================================
-    // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯
+    // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯 (已修復顯現控制)
     // ==========================================
     let selectedCategory = '';
     const serviceCards = document.querySelectorAll('.service-type-card');
@@ -92,8 +92,14 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('border-success', 'shadow-lg', 'selected-card');
             selectedCategory = this.getAttribute('data-category');
 
-            if (step0) step0.classList.add('d-none');
-            if (step1) step1.classList.remove('d-none');
+            if (step0) {
+                step0.classList.add('d-none');
+                step0.style.display = 'none';
+            }
+            if (step1) {
+                step1.classList.remove('d-none');
+                step1.style.display = 'block';
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
@@ -107,8 +113,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const backToStep0Btn = document.getElementById('backToStep0Btn');
     if (backToStep0Btn) {
         backToStep0Btn.addEventListener('click', function () {
-            step1.classList.add('d-none');
-            step0.classList.remove('d-none');
+            if (step1) {
+                step1.classList.add('d-none');
+                step1.style.display = 'none';
+            }
+            if (step0) {
+                step0.classList.remove('d-none');
+                step0.style.display = 'block';
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
