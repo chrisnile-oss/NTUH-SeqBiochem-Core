@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const multiStepForm = document.getElementById('multiStepForm');
         if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';[cite: 1, 3, 5, 8, 9]
         
         fetch(`${scriptURL}?token=${token}`)
             .then(response => response.json())
@@ -1045,9 +1045,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
+                // 🛠️ 雙重保險：同時提供中文與英文鍵值，確保後端絕對收得到 Q 欄資料
                 "研究主題": document.getElementById('researchTopic')?.value || '',
                 "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
-                "備註": document.getElementById('experimentRemarks')?.value || ''
+                "備註": document.getElementById('experimentRemarks')?.value || '',
+                researchTopic: document.getElementById('researchTopic')?.value || '',
+                experimentalDesign: document.getElementById('experimentalDesign')?.value || '',
+                experimentRemarks: document.getElementById('experimentRemarks')?.value || ''
             };
 
             const submitBtn = document.getElementById('submitBtn');
