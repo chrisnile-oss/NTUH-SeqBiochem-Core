@@ -935,90 +935,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (移除 required 限制以確保送出)
+    // 7. 最終極暴力解法：直接點擊按鈕觸發送出，徹底擺脫表單 submit 攔截
     // ==========================================
-    const multiStepForm = document.getElementById('multiStepForm');
-    if (multiStepForm) {
-        multiStepForm.addEventListener('submit', function (e) {
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function (e) {
             e.preventDefault();
-
-            // 💡 關鍵修正：強制移除所有 required 限制，防止瀏覽器因為隱藏分頁欄位而攔截送出
-            document.querySelectorAll('[required]').forEach(el => el.removeAttribute('required'));
+            e.stopPropagation();
 
             let mainCategoryText = '';
             let detailsTextList = [];
-            let hasError = false;
-            let errorMessage = '';
 
             if (selectedCategory === 'genomics') {
-                const service0Checked = document.getElementById('service0')?.checked;
-                if (service0Checked) {
+                if (document.getElementById('service0')?.checked) {
                     mainCategoryText += '16S PCR; ';
                     let pcrSubText = '';
-                    if (document.getElementById('pcr16s_v3v4')?.checked) {
-                        pcrSubText = '16S V3-V4';
-                    } else if (document.getElementById('pcr16s_full_pacbio')?.checked) {
-                        pcrSubText = 'Full Length PacBio';
-                    } else if (document.getElementById('pcr16s_full_nanopore')?.checked) {
-                        pcrSubText = 'Full Length Nanopore';
-                    }
-                    if (pcrSubText) {
-                        detailsTextList.push(`16S細項: ${pcrSubText}`);
-                    }
+                    if (document.getElementById('pcr16s_v3v4')?.checked) pcrSubText = '16S V3-V4';
+                    else if (document.getElementById('pcr16s_full_pacbio')?.checked) pcrSubText = 'Full Length PacBio';
+                    else if (document.getElementById('pcr16s_full_nanopore')?.checked) pcrSubText = 'Full Length Nanopore';
+                    if (pcrSubText) detailsTextList.push(`16S細項: ${pcrSubText}`);
                 }
-
-                const service1Checked = document.getElementById('service1')?.checked;
-                if (service1Checked) {
-                    const sub1 = document.getElementById('sub1')?.value;
-                    const sampleType = document.getElementById('sampleType1')?.value;
-                    
-                    if (!sub1) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了「核酸萃取/樣本品管/核酸片段化」，請選擇其「服務項目」！';
-                    } else if (!sampleType) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您選擇了核酸萃取服務，請選擇對應的樣品種類！';
-                    } else {
-                        mainCategoryText += '核酸萃取/樣本品管/核酸片段化; ';
-                        detailsTextList.push(`項目: ${sub1}`);
-                        detailsTextList.push(`樣品: ${sampleType}`);
-                    }
+                if (document.getElementById('service1')?.checked) {
+                    mainCategoryText += '核酸萃取/樣本品管/核酸片段化; ';
+                    detailsTextList.push(`項目: ${document.getElementById('sub1')?.value || ''}`);
+                    detailsTextList.push(`樣品: ${document.getElementById('sampleType1')?.value || ''}`);
                 }
-
-                const service2Checked = document.getElementById('service2')?.checked;
-                if (service2Checked) {
-                    const sub2 = document.getElementById('sub2')?.value;
-                    if (!sub2) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了「NGS高通量定序建庫」，請選擇對應的建庫項目！';
-                    } else {
-                        mainCategoryText += 'NGS高通量定序建庫; ';
-                        detailsTextList.push(`建庫: ${sub2}`);
-                    }
+                if (document.getElementById('service2')?.checked) {
+                    mainCategoryText += 'NGS高通量定序建庫; ';
+                    detailsTextList.push(`建庫: ${document.getElementById('sub2')?.value || ''}`);
                 }
-
-                const service3Checked = document.getElementById('service3')?.checked;
-                if (service3Checked) {
-                    const sub3 = document.getElementById('sub3Category')?.value;
-                    if (!sub3) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了 Single Cell，請選擇平台！';
-                    } else {
-                        mainCategoryText += 'Single Cell Transcriptomics; ';
-                        detailsTextList.push(`平台: ${sub3}`);
-                    }
+                if (document.getElementById('service3')?.checked) {
+                    mainCategoryText += 'Single Cell Transcriptomics; ';
+                    detailsTextList.push(`平台: ${document.getElementById('sub3Category')?.value || ''}`);
                 }
-
-                const service4Checked = document.getElementById('service4')?.checked;
-                if (service4Checked) {
-                    const sub4 = document.getElementById('sub4Category')?.value;
-                    if (!sub4) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
-                    } else {
-                        mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
-                        detailsTextList.push(`平台: ${sub4}`);
-                    }
+                if (document.getElementById('service4')?.checked) {
+                    mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
+                    detailsTextList.push(`平台: ${document.getElementById('sub4Category')?.value || ''}`);
                 }
             }
 
@@ -1027,10 +979,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            if (hasError) {
-                alert(errorMessage);
-                return;
-            }
+            // 直接抓取第三頁的三個核心欄位
+            const researchVal = document.getElementById('researchTopic')?.value || '';
+            const designVal = document.getElementById('experimentalDesign')?.value || '';
+            const remarksVal = document.getElementById('experimentRemarks')?.value || '';
 
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
@@ -1048,24 +1000,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                // 第三頁實驗需求資訊（雙重保險鍵值）
-                "研究主題": document.getElementById('researchTopic')?.value || '',
-                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
-                "備註": document.getElementById('experimentRemarks')?.value || '',
-                researchTopic: document.getElementById('researchTopic')?.value || '',
-                experimentalDesign: document.getElementById('experimentalDesign')?.value || '',
-                experimentRemarks: document.getElementById('experimentRemarks')?.value || ''
+                // 絕對保險的中文與英文鍵值
+                "研究主題": researchVal,
+                "實驗設計說明": designVal,
+                "備註": remarksVal,
+                researchTopic: researchVal,
+                experimentalDesign: designVal,
+                experimentRemarks: remarksVal
             };
 
-            const submitBtn = document.getElementById('submitBtn');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.textContent = '資料傳送中...';
-            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = '資料傳送中...';
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
-            // 使用隱藏 iframe + form 提交（完全繞過 CORS 限制）
+            // 建立背景隱藏 iframe 與 form 進行傳統 POST 提交
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
             iframe.name = iframeName;
@@ -1087,10 +1036,8 @@ document.addEventListener('DOMContentLoaded', function () {
             form.submit();
 
             setTimeout(() => {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '確認送出申請';
-                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = '確認送出申請';
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
                 form.remove();
