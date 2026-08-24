@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
-    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制 (修正：僅在帶有 token 時執行)
+    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制
     // ==========================================
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     
-    if (token && token.trim() !== '') {
+    if (token) {
         const multiStepForm = document.getElementById('multiStepForm');
         if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ==========================================
-    // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯 (已修復顯現控制)
+    // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯 (完全還原第一版正常運作機制)
     // ==========================================
     let selectedCategory = '';
     const serviceCards = document.querySelectorAll('.service-type-card');
@@ -92,14 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('border-success', 'shadow-lg', 'selected-card');
             selectedCategory = this.getAttribute('data-category');
 
-            if (step0) {
-                step0.classList.add('d-none');
-                step0.style.display = 'none';
-            }
-            if (step1) {
-                step1.classList.remove('d-none');
-                step1.style.display = 'block';
-            }
+            step0.classList.add('d-none');
+            step1.classList.remove('d-none');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
@@ -113,14 +107,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const backToStep0Btn = document.getElementById('backToStep0Btn');
     if (backToStep0Btn) {
         backToStep0Btn.addEventListener('click', function () {
-            if (step1) {
-                step1.classList.add('d-none');
-                step1.style.display = 'none';
-            }
-            if (step0) {
-                step0.classList.remove('d-none');
-                step0.style.display = 'block';
-            }
+            step1.classList.add('d-none');
+            step0.classList.remove('d-none');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
