@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const multiStepForm = document.getElementById('multiStepForm');
         if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';[cite: 1]
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
         
         fetch(`${scriptURL}?token=${token}`)
             .then(response => response.json())
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     serviceCards.forEach(card => {
         card.addEventListener('click', function () {
-            // 如果點到的是尚未開放的生化服務或實驗諮詢，跳出提示並中斷
             if (this.classList.contains('disabled-card')) {
                 alert('此服務項目尚未開放，敬請期待！');
                 return;
@@ -93,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('border-success', 'shadow-lg', 'selected-card');
             selectedCategory = this.getAttribute('data-category');
 
-            if (step0) step0.classList.add('d-none');
-            if (step1) step1.classList.remove('d-none');
+            step0.classList.add('d-none');
+            step1.classList.remove('d-none');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
@@ -1057,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';[cite: 1]
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
