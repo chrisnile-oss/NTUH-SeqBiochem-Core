@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 最終極暴力解法：直接點擊按鈕觸發送出，徹底擺脫表單 submit 攔截
+    // 7. 最終極穩定解法：將所有欄位（含第三頁）拆為獨立 hidden input 傳遞
     // ==========================================
     const submitBtn = document.getElementById('submitBtn');
     if (submitBtn) {
@@ -979,12 +979,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 直接抓取第三頁的三個核心欄位
-            const researchVal = document.getElementById('researchTopic')?.value || '';
-            const designVal = document.getElementById('experimentalDesign')?.value || '';
-            const remarksVal = document.getElementById('experimentRemarks')?.value || '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = '資料傳送中...';
 
-            const formDataObj = {
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
+
+            const iframeName = 'hidden_iframe_' + Date.now();
+            const iframe = document.createElement('iframe');
+            iframe.name = iframeName;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = scriptURL;
+            form.target = iframeName;
+
+            // 💡 關鍵：將每個欄位（包含第三頁的中文鍵值）獨立建立為一個隱藏 input
+            const fields = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
                 piUnit: document.getElementById('piUnit')?.value || '',
@@ -999,38 +1011,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactTitle: document.getElementById('contactTitle')?.value || '',
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
-                
-                // 絕對保險的中文與英文鍵值
-                "研究主題": researchVal,
-                "實驗設計說明": designVal,
-                "備註": remarksVal,
-                researchTopic: researchVal,
-                experimentalDesign: designVal,
-                experimentRemarks: remarksVal
+                "研究主題": document.getElementById('researchTopic')?.value || '',
+                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
+                "備註": document.getElementById('experimentRemarks')?.value || '',
+                researchTopic: document.getElementById('researchTopic')?.value || '',
+                experimentalDesign: document.getElementById('experimentalDesign')?.value || '',
+                experimentRemarks: document.getElementById('experimentRemarks')?.value || ''
             };
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = '資料傳送中...';
-
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
-
-            // 建立背景隱藏 iframe 與 form 進行傳統 POST 提交
-            const iframeName = 'hidden_iframe_' + Date.now();
-            const iframe = document.createElement('iframe');
-            iframe.name = iframeName;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = scriptURL;
-            form.target = iframeName;
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = JSON.stringify(formDataObj);
-            form.appendChild(input);
+            for (const key in fields) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
 
             document.body.appendChild(form);
             form.submit();
