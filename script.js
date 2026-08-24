@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ==========================================
-    // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯 (完全還原第一版正常運作機制)
+    // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯
     // ==========================================
     let selectedCategory = '';
     const serviceCards = document.querySelectorAll('.service-type-card');
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     serviceCards.forEach(card => {
         card.addEventListener('click', function () {
+            // 如果點到的是尚未開放的生化服務或實驗諮詢，跳出提示並中斷
             if (this.classList.contains('disabled-card')) {
                 alert('此服務項目尚未開放，敬請期待！');
                 return;
@@ -92,8 +93,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('border-success', 'shadow-lg', 'selected-card');
             selectedCategory = this.getAttribute('data-category');
 
-            step0.classList.add('d-none');
-            step1.classList.remove('d-none');
+            if (step0) step0.classList.add('d-none');
+            if (step1) step1.classList.remove('d-none');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
