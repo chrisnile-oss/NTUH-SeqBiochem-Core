@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
-    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制
+    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制 (修正：僅在帶有 token 時執行)
     // ==========================================
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     
-    if (token) {
+    if (token && token.trim() !== '') {
         const multiStepForm = document.getElementById('multiStepForm');
         if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
 
-        // ⚠️ 使用唯一正確的部署網址
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';[cite: 1]
         
         fetch(`${scriptURL}?token=${token}`)
@@ -93,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('border-success', 'shadow-lg', 'selected-card');
             selectedCategory = this.getAttribute('data-category');
 
-            step0.classList.add('d-none');
-            step1.classList.remove('d-none');
+            if (step0) step0.classList.add('d-none');
+            if (step1) step1.classList.remove('d-none');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
@@ -1057,7 +1056,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
-            // ⚠️ 確保此處使用唯一正確的部署網址
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';[cite: 1]
 
             const iframeName = 'hidden_iframe_' + Date.now();
