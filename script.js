@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (使用 URLSearchParams 繞過 CORS)
+    // 7. 表單最後確認送出與 Google Sheets 串接 (使用隱藏 iframe 表單送出)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -998,8 +998,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service3Checked) {
                     const sub3 = document.getElementById('sub3Category')?.value;
                     if (!sub3) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了 Single Cell，請選擇平台！';
+                        hasError, errorMessage = true, '⚠️ 您勾選了 Single Cell，請選擇平台！';
                     } else {
                         mainCategoryText += 'Single Cell Transcriptomics; ';
                         detailsTextList.push(`平台: ${sub3}`);
@@ -1010,8 +1009,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service4Checked) {
                     const sub4 = document.getElementById('sub4Category')?.value;
                     if (!sub4) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
+                        hasError, errorMessage = true, '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
                     } else {
                         mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
                         detailsTextList.push(`平台: ${sub4}`);
@@ -1062,33 +1060,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
-            // 使用 URLSearchParams 包裝，確保後端的 e.parameter.data 100% 收得到
-            const urlEncodedData = new URLSearchParams();
-            urlEncodedData.append('data', JSON.stringify(formDataObj));
+            // 使用隱藏 iframe + form 提交（完全繞過 CORS 限制）
+            const iframeName = 'hidden_iframe_' + Date.now();
+            const iframe = document.createElement('iframe');
+            iframe.name = iframeName;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
 
-            fetch(scriptURL, {
-                method: 'POST',
-                body: urlEncodedData
-            })
-            .then(response => response.json())
-            .then(res => {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = scriptURL;
+            form.target = iframeName;
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(formDataObj);
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+
+            setTimeout(() => {
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = '確認送出申請';
                 }
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
-            })
-            .catch(error => {
-                // 即使發生跨網域 CORS 提示，Google Apps Script 也已經順利寫入資料
-                console.log('Processed:', error);
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '確認送出申請';
-                }
-                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-            });
+                form.remove();
+                iframe.remove();
+            }, 1000);
         });
     }
 });
