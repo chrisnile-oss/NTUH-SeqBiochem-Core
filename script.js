@@ -917,7 +917,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="preview-toolbar">
                         <span class="fw-bold text-secondary">📄 檢體送件單預覽畫面</span>
                         <div>
-                            <button onclick="window.print()" class="btn btn-primary btn-sm fw-bold me-2">🖨️ 列印此單子</button>
+                            <button onclick="window.print()" class="db-print btn btn-primary btn-sm fw-bold me-2">🖨️ 列印此單子</button>
                             <button onclick="window.close()" class="btn btn-secondary btn-sm">關閉頁面</button>
                         </div>
                     </div>
@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接
+    // 7. 表單最後確認送出與 Google Sheets 串接 (使用隱藏表單提交)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -974,7 +974,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         errorMessage = '⚠️ 您勾選了「核酸萃取/樣本品管/核酸片段化」，請選擇其「服務項目」！';
                     } else if (!sampleType) {
                         hasError = true;
-                        errorMessage = '⚠️ 您選擇了核酸萃取服務，請選擇對應的「樣品種類 (Sample Type)」！';
+                        errorMessage = '⚠️ 您選擇了核酸萃取服務，請選擇對應的樣品種類！';
                     } else {
                         mainCategoryText += '核酸萃取/樣本品管/核酸片段化; ';
                         detailsTextList.push(`項目: ${sub1}`);
@@ -987,7 +987,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const sub2 = document.getElementById('sub2')?.value;
                     if (!sub2) {
                         hasError = true;
-                        errorMessage = '⚠️ 您勾選了「NGS高通量定序建庫」，請選擇對應的「建庫項目」！';
+                        errorMessage = '⚠️ 您勾選了「NGS高通量定序建庫」，請選擇對應的建庫項目！';
                     } else {
                         mainCategoryText += 'NGS高通量定序建庫; ';
                         detailsTextList.push(`建庫: ${sub2}`);
@@ -998,8 +998,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service3Checked) {
                     const sub3 = document.getElementById('sub3Category')?.value;
                     if (!sub3) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了「Single Cell Transcriptomics」，請選擇對應的平台！';
+                        hasError, errorMessage = true, '⚠️ 您勾選了 Single Cell，請選擇平台！';
                     } else {
                         mainCategoryText += 'Single Cell Transcriptomics; ';
                         detailsTextList.push(`平台: ${sub3}`);
@@ -1010,8 +1009,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service4Checked) {
                     const sub4 = document.getElementById('sub4Category')?.value;
                     if (!sub4) {
-                        hasError = true;
-                        errorMessage = '⚠️ 您勾選了「Spatial Transcriptomics 空間體學」，請選擇對應的平台！';
+                        hasError, errorMessage = true, '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
                     } else {
                         mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
                         detailsTextList.push(`平台: ${sub4}`);
@@ -1029,6 +1027,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // 嚴格還原上禮拜五成功運作的 JSON 結構格式
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
@@ -1045,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                // 🛠️ 雙重保險：同時提供中文與英文鍵值，確保後端絕對收得到 Q 欄資料
+                // 同時提供各種可能對應的鍵值，確保後端絕對收得到
                 "研究主題": document.getElementById('researchTopic')?.value || '',
                 "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
                 "備註": document.getElementById('experimentRemarks')?.value || '',
@@ -1062,6 +1061,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
+            // 回歸上禮拜五成功運作的 iframe 隱藏表單 POST 提交機制
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
             iframe.name = iframeName;
