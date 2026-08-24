@@ -999,7 +999,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const sub3 = document.getElementById('sub3Category')?.value;
                     if (!sub3) {
                         hasError = true;
-                        errorMessage = '⚠️ 您勾選了「Single Cell Transcriptomics」，請選擇對應的「平台」！';
+                        errorMessage = '⚠️ 您勾選了「Single Cell Transcriptomics」，請選擇對應的平台！';
                     } else {
                         mainCategoryText += 'Single Cell Transcriptomics; ';
                         detailsTextList.push(`平台: ${sub3}`);
@@ -1029,16 +1029,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 在前端先組合好 Q 欄文字，透過 shiyanXuqiu 欄位安全傳遞
-            const rTopic = document.getElementById('researchTopic')?.value || '';
-            const eDesign = document.getElementById('experimentalDesign')?.value || '';
-            const eRemarks = document.getElementById('experimentRemarks')?.value || '';
-
-            const combinedXuqiu = 
-                "【研究主題】\n" + rTopic + "\n\n" +
-                "【實驗設計說明】\n" + eDesign + "\n\n" +
-                "【備註】\n" + eRemarks;
-
+            // 使用原本正確的 JSON 格式傳送
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
@@ -1055,7 +1046,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                shiyanXuqiu: combinedXuqiu
+                "研究主題": document.getElementById('researchTopic')?.value || '',
+                "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
+                "備註": document.getElementById('experimentRemarks')?.value || ''
             };
 
             const submitBtn = document.getElementById('submitBtn');
@@ -1064,7 +1057,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
-            // ⚠️ 確保此處使用正確部署的網址
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
             const iframeName = 'hidden_iframe_' + Date.now();
