@@ -1,5 +1,82 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
+    // 0. 🔐 網址 Token 自動偵測與下載檢體單機制 (新增功能)
+    // ==========================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if (token) {
+        // 如果網址帶有 token，自動隱藏主表單，向後端請求該筆資料並彈出檢體單預覽
+        const multiStepForm = document.getElementById('multiStepForm');
+        if (multiStepForm) multiStepForm.innerHTML = '<div class="text-center py-5"><h4 class="text-primary fw-bold">正在為您載入專屬檢體送件單，請稍候...</h4></div>';
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
+        
+        fetch(`${scriptURL}?token=${token}`)
+            .then(response => response.json())
+            .then(res => {
+                if (res.status === 'success' && res.data) {
+                    const row = res.data;
+                    
+                    // 自動填入檢體單欄位資料
+                    const lblName = document.getElementById('lblApplicantName');
+                    const lblPhone = document.getElementById('lblApplicantPhone');
+                    const lblDate = document.getElementById('lblDate');
+                    const lblMainCategory = document.getElementById('lblMainCategory');
+                    const lblServiceDetails = document.getElementById('lblServiceDetails');
+                    const lblApplicantEmail = document.getElementById('lblApplicantEmail');
+
+                    if (lblName) lblName.textContent = row['申請人姓名'] || '';
+                    if (lblPhone) lblPhone.textContent = row['申請人電話'] || '';
+                    if (lblApplicantEmail) lblApplicantEmail.textContent = row['申請人信箱'] || '';
+                    if (lblDate) {
+                        const d = row['提交時間'] ? new Date(row['提交時間']) : new Date();
+                        lblDate.textContent = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    }
+
+                    if (lblMainCategory) lblMainCategory.textContent = row['核心服務項目'] || '';
+                    if (lblServiceDetails) {
+                        lblServiceDetails.innerHTML = row['服務細項內容'] ? String(row['服務細項內容']).replace(/\n/g, '<br>') : '（無特定細項）';
+                    }
+
+                    // 產生預設 6 筆檢體表格
+                    const sampleTableBody = document.getElementById('sampleTableBody');
+                    if (sampleTableBody) {
+                        sampleTableBody.innerHTML = '';
+                        for (let i = 1; i <= 6; i++) {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td class="text-center align-middle" style="height: 32px;">${i}</td>
+                                <td></td>
+                                <td></td>
+                            `;
+                            sampleTableBody.appendChild(tr);
+                        }
+                    }
+
+                    // 自動觸發 Modal 預覽視窗顯示
+                    const printSectionHtml = document.getElementById('printSection').innerHTML;
+                    const pdfPreviewContainer = document.getElementById('pdfPreviewContainer');
+                    if (pdfPreviewContainer) {
+                        pdfPreviewContainer.innerHTML = printSectionHtml;
+                    }
+
+                    const previewModalEl = document.getElementById('pdfPreviewModal');
+                    if (previewModalEl) {
+                        const modal = new bootstrap.Modal(previewModalEl);
+                        modal.show();
+                    }
+                } else {
+                    alert('連結已失效或找不到對應的申請資料！');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('載入資料發生錯誤，請稍後再試。');
+            });
+    }
+
+    // ==========================================
     // 1. 第一頁：服務大類選擇與直接點擊換頁邏輯
     // ==========================================
     let selectedCategory = '';
@@ -956,7 +1033,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 在這裡把步驟二的「研究主題」、「實驗設計說明」、「備註」一起打包進去！
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
@@ -973,7 +1049,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                // 補上這三個欄位，對應後端 GAS 的接收與合併
                 "研究主題": document.getElementById('researchTopic')?.value || '',
                 "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
                 "備註": document.getElementById('experimentRemarks')?.value || ''
@@ -985,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = '資料傳送中...';
             }
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxA6HegXufIW7q2ZV2uYeS4T1svSHT0Tq8Sp5gowk1tdowUm2L6oHsjTd8jc7gqYp_b/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
             const iframeName = 'hidden_iframe_' + Date.now();
             const iframe = document.createElement('iframe');
