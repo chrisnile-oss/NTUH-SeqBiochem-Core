@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // 7. 表單最後確認送出與 Google Sheets 串接 (使用隱藏表單提交)
+    // 7. 表單最後確認送出與 Google Sheets 串接 (改用標準 fetch POST)
     // ==========================================
     const multiStepForm = document.getElementById('multiStepForm');
     if (multiStepForm) {
@@ -998,7 +998,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service3Checked) {
                     const sub3 = document.getElementById('sub3Category')?.value;
                     if (!sub3) {
-                        hasError, errorMessage = true, '⚠️ 您勾選了 Single Cell，請選擇平台！';
+                        hasError = true;
+                        errorMessage = '⚠️ 您勾選了 Single Cell，請選擇平台！';
                     } else {
                         mainCategoryText += 'Single Cell Transcriptomics; ';
                         detailsTextList.push(`平台: ${sub3}`);
@@ -1009,7 +1010,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (service4Checked) {
                     const sub4 = document.getElementById('sub4Category')?.value;
                     if (!sub4) {
-                        hasError, errorMessage = true, '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
+                        hasError = true;
+                        errorMessage = '⚠️ 您勾選了 Spatial Transcriptomics，請選擇平台！';
                     } else {
                         mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
                         detailsTextList.push(`平台: ${sub4}`);
@@ -1027,7 +1029,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 嚴格還原上禮拜五成功運作的 JSON 結構格式
             const formDataObj = {
                 identity: document.getElementById('applicantIdentity')?.value || '',
                 piName: document.getElementById('piName')?.value || '',
@@ -1044,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 contactEmail: document.getElementById('contactEmail')?.value || '',
                 contactPhone: document.getElementById('contactPhone')?.value || '',
                 
-                // 同時提供各種可能對應的鍵值，確保後端絕對收得到
+                // 第三頁實驗需求資訊（雙重保險鍵值）
                 "研究主題": document.getElementById('researchTopic')?.value || '',
                 "實驗設計說明": document.getElementById('experimentalDesign')?.value || '',
                 "備註": document.getElementById('experimentRemarks')?.value || '',
@@ -1061,33 +1062,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwt2GH8qnFzxfsrGaoWseQGlgGZydCG1h30sn762S7VsFVyawJhN0qTY1bZMfG3NrU5/exec';
 
-            // 回歸上禮拜五成功運作的 iframe 隱藏表單 POST 提交機制
-            const iframeName = 'hidden_iframe_' + Date.now();
-            const iframe = document.createElement('iframe');
-            iframe.name = iframeName;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = scriptURL;
-            form.target = iframeName;
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = JSON.stringify(formDataObj);
-            form.appendChild(input);
-
-            document.body.appendChild(form);
-            form.submit();
-
-            setTimeout(() => {
+            // 直接使用 fetch 將 JSON 送到後端
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataObj)
+            })
+            .then(() => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '確認送出申請';
+                }
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
-                form.remove();
-                iframe.remove();
-            }, 1000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('送出發生錯誤，請稍後再試！');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '確認送出申請';
+                }
+            });
         });
     }
 });
