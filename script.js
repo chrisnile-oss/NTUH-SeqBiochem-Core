@@ -586,6 +586,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 visiumSubContainer.classList.remove('d-none');
                 xeniumSubContainer.classList.add('d-none');
                 if (xeniumSub) xeniumSub.value = '';
+                document.querySelectorAll('#xeniumSubContainer .form-check-input').forEach(cb => cb.checked = false);
             } else if (val === 'Xenium') {
                 xeniumSubContainer.classList.remove('d-none');
                 visiumSubContainer.classList.add('d-none');
@@ -731,6 +732,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     isXenium = true;
                     const xSub = document.getElementById('xeniumSub').value;
                     if (xSub) detailsText.push(`規格: ${xSub}`);
+                    const xQcList = Array.from(document.querySelectorAll('#xeniumSubContainer .form-check-input:checked')).map(cb => cb.value);
+                    if (xQcList.length > 0) detailsText.push(`QC 方式: ${xQcList.join('、')}`);
                 }
             } else if (blockIndex === 'biochem') {
                 mainTitle = '🔬 生化服務項目';
@@ -741,6 +744,23 @@ document.addEventListener('DOMContentLoaded', function () {
             if (lblMainCategory) lblMainCategory.textContent = mainTitle;
             if (lblServiceDetails) {
                 lblServiceDetails.textContent = detailsText.length > 0 ? detailsText.join('\n') : '（未勾選特定細項）';
+            }
+
+            // 🔧 讓 Xenium 的 QC 方式在送件單上有獨立顯眼的欄位，方便核心人員直接看到
+            const lblXeniumQcRow = document.getElementById('lblXeniumQcRow');
+            const lblXeniumQc = document.getElementById('lblXeniumQc');
+            if (lblXeniumQcRow && lblXeniumQc) {
+                if (isXenium) {
+                    const xQcList = Array.from(document.querySelectorAll('#xeniumSubContainer .form-check-input:checked')).map(cb => cb.value);
+                    if (xQcList.length > 0) {
+                        lblXeniumQc.textContent = xQcList.join('、');
+                        lblXeniumQcRow.style.display = '';
+                    } else {
+                        lblXeniumQcRow.style.display = 'none';
+                    }
+                } else {
+                    lblXeniumQcRow.style.display = 'none';
+                }
             }
 
             const sampleTableHeader = document.getElementById('sampleTableHeader');
@@ -970,7 +990,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 if (document.getElementById('service4')?.checked) {
                     mainCategoryText += 'Spatial Transcriptomics 空間體學; ';
-                    detailsTextList.push(`平台: ${document.getElementById('sub4Category')?.value || ''}`);
+                    const sub4CatVal = document.getElementById('sub4Category')?.value || '';
+                    detailsTextList.push(`平台: ${sub4CatVal}`);
+                    if (sub4CatVal === 'Xenium') {
+                        const xQcList = Array.from(document.querySelectorAll('#xeniumSubContainer .form-check-input:checked')).map(cb => cb.value);
+                        if (xQcList.length > 0) detailsTextList.push(`QC 方式: ${xQcList.join('、')}`);
+                    }
                 }
             }
 

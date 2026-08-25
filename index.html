@@ -519,6 +519,22 @@
                                                         <option value="Xenium Prime 5K - human">Xenium Prime 5K - human</option>
                                                         <option value="Xenium Custom Panel (尚未開放)" disabled>Xenium Custom Panel (尚未開放)</option>
                                                     </select>
+
+                                                    <label class="form-label fw-bold text-dark mt-3 mb-2">請選擇樣本 QC 方式（可複選）：</label>
+                                                    <div class="d-flex flex-column gap-2 mb-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="xeniumQc_he" value="HE染色">
+                                                            <label class="form-check-label" for="xeniumQc_he">HE染色</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="xeniumQc_dapi" value="DAPI染色">
+                                                            <label class="form-check-label" for="xeniumQc_dapi">DAPI染色</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="xeniumQc_dv200" value="DV200 (RNA 200bp以上%)">
+                                                            <label class="form-check-label" for="xeniumQc_dv200">DV200（RNA 200bp以上%）</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="mt-3 pt-3 border-top text-end">
@@ -571,9 +587,13 @@
                 </tr>
                 <tr>
                     <th class="table-light">服務細項內容</th>
-                    <td id="lblServiceDetails" style="font-weight: bold; color: #0d6efd;"></td>
+                    <td id="lblServiceDetails" style="font-weight: bold; color: #0d6efd; white-space: pre-line;"></td>
                     <th class="table-light">申請人信箱</th>
                     <td id="lblApplicantEmail" style="font-weight: bold;"></td>
+                </tr>
+                <tr id="lblXeniumQcRow" style="display: none;">
+                    <th class="table-light" style="background-color: #ffe6eb;">⚠️ 樣本 QC 方式</th>
+                    <td id="lblXeniumQc" colspan="3" style="font-weight: bold; color: #d63384; font-size: 14px;"></td>
                 </tr>
             </tbody>
         </table>
