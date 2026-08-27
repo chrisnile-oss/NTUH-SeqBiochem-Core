@@ -152,6 +152,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const toStep2Btn = document.getElementById('toStep2Btn');
     if (toStep2Btn) {
         toStep2Btn.addEventListener('click', function () {
+            const researchTopic = document.getElementById('researchTopic').value.trim();
+            const experimentalDesign = document.getElementById('experimentalDesign').value.trim();
+
+            if (!researchTopic || !experimentalDesign) {
+                alert('「簡述研究主題」與「簡述實驗設計說明」！');
+                return;
+            }
+
             stepDetail.classList.add('d-none');
             step2.classList.remove('d-none');
 
