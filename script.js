@@ -1,5 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
+    // 0-1. 📢 首頁公告載入(向 GAS 後台的「公告」分頁查詢，決定是否顯示黃色橫幅)
+    // ==========================================
+    (function loadAnnouncement() {
+        const announcementScriptURL = 'https://script.google.com/macros/s/AKfycbxA6HegXufIW7q2ZV2uYeS4T1svSHT0Tq8Sp5gowk1tdowUm2L6oHsjTd8jc7gqYp_b/exec';
+
+        fetch(`${announcementScriptURL}?action=getAnnouncement`)
+            .then(response => response.json())
+            .then(res => {
+                if (res && res.status === 'success' && res.visible && res.text && res.text.trim() !== '') {
+                    const bar = document.getElementById('announcementBar');
+                    const textEl = document.getElementById('announcementTextContent');
+                    if (bar && textEl) {
+                        textEl.textContent = res.text;
+                        bar.classList.remove('d-none');
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('公告載入失敗：', err);
+            });
+    })();
+
+    // ==========================================
     // 0. 🔐 網址 Token 自動偵測與下載檢體單機制
     // ==========================================
     const urlParams = new URLSearchParams(window.location.search);
