@@ -227,3 +227,55 @@ body.bg-light {
         margin: 10mm;
     }
 }
+
+/* ================= RUO 聲明（研究用聲明） ================= */
+.ruo-notice {
+    color: #8a3d3d;
+    font-weight: 600;
+    padding: 10px 16px;
+    background-color: #fbeceb;
+    border: 1px solid #f0d4d2;
+    border-radius: 6px;
+}
+
+/* ================= 頁尾聯絡資訊 ================= */
+.site-footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+    color: #dce8ef;
+}
+
+.site-footer .footer-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.site-footer .footer-contact {
+    font-size: 13.5px;
+    color: #7dd8f0;
+    margin-bottom: 6px;
+}
+
+.site-footer .footer-contact a {
+    color: #7dd8f0;
+    text-decoration: none;
+}
+
+.site-footer .footer-contact a:hover {
+    text-decoration: underline;
+}
+
+.site-footer .footer-address {
+    font-size: 13px;
+    color: #93aab8;
+}
+
+/* 列印時隱藏頁尾 */
+@media print {
+    .site-footer {
+        display: none !important;
+    }
+}
