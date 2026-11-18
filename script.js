@@ -110,6 +110,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // 外部連結卡片(例如生化服務):另開新分頁,不進入本頁表單流程
+            const externalUrl = this.getAttribute('data-external-url');
+            if (externalUrl) {
+                window.open(externalUrl, '_blank', 'noopener,noreferrer');
+                return;
+            }
+
             serviceCards.forEach(c => c.classList.remove('border-primary', 'border-success', 'border-info', 'shadow-lg', 'selected-card'));
             
             this.classList.add('border-success', 'shadow-lg', 'selected-card');
